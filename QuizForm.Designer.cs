@@ -1,0 +1,188 @@
+﻿namespace Coursework
+{
+    partial class QuizForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.lblQuestion = new System.Windows.Forms.Label();
+            this.rbOptionA = new System.Windows.Forms.RadioButton();
+            this.rbOptionB = new System.Windows.Forms.RadioButton();
+            this.rbOptionC = new System.Windows.Forms.RadioButton();
+            this.rbOptionD = new System.Windows.Forms.RadioButton();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.btnPrevious = new System.Windows.Forms.Button();
+            this.lblTimer = new System.Windows.Forms.Label();
+            this.QuizTimer = new System.Windows.Forms.Timer(this.components);
+            this.lblQuestionNo = new System.Windows.Forms.Label();
+            this.lblTopic = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // lblQuestion
+            // 
+            this.lblQuestion.AutoSize = true;
+            this.lblQuestion.Location = new System.Drawing.Point(107, 61);
+            this.lblQuestion.Name = "lblQuestion";
+            this.lblQuestion.Size = new System.Drawing.Size(44, 16);
+            this.lblQuestion.TabIndex = 0;
+            this.lblQuestion.Text = "label1";
+            // 
+            // rbOptionA
+            // 
+            this.rbOptionA.AutoSize = true;
+            this.rbOptionA.Location = new System.Drawing.Point(127, 99);
+            this.rbOptionA.Name = "rbOptionA";
+            this.rbOptionA.Size = new System.Drawing.Size(103, 20);
+            this.rbOptionA.TabIndex = 1;
+            this.rbOptionA.TabStop = true;
+            this.rbOptionA.Text = "radioButton1";
+            this.rbOptionA.UseVisualStyleBackColor = true;
+            // 
+            // rbOptionB
+            // 
+            this.rbOptionB.AutoSize = true;
+            this.rbOptionB.Location = new System.Drawing.Point(127, 144);
+            this.rbOptionB.Name = "rbOptionB";
+            this.rbOptionB.Size = new System.Drawing.Size(103, 20);
+            this.rbOptionB.TabIndex = 2;
+            this.rbOptionB.TabStop = true;
+            this.rbOptionB.Text = "radioButton1";
+            this.rbOptionB.UseVisualStyleBackColor = true;
+            // 
+            // rbOptionC
+            // 
+            this.rbOptionC.AutoSize = true;
+            this.rbOptionC.Location = new System.Drawing.Point(127, 184);
+            this.rbOptionC.Name = "rbOptionC";
+            this.rbOptionC.Size = new System.Drawing.Size(103, 20);
+            this.rbOptionC.TabIndex = 3;
+            this.rbOptionC.TabStop = true;
+            this.rbOptionC.Text = "radioButton1";
+            this.rbOptionC.UseVisualStyleBackColor = true;
+            // 
+            // rbOptionD
+            // 
+            this.rbOptionD.AutoSize = true;
+            this.rbOptionD.Location = new System.Drawing.Point(127, 228);
+            this.rbOptionD.Name = "rbOptionD";
+            this.rbOptionD.Size = new System.Drawing.Size(103, 20);
+            this.rbOptionD.TabIndex = 4;
+            this.rbOptionD.TabStop = true;
+            this.rbOptionD.Text = "radioButton1";
+            this.rbOptionD.UseVisualStyleBackColor = true;
+            // 
+            // btnNext
+            // 
+            this.btnNext.Location = new System.Drawing.Point(625, 329);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(111, 46);
+            this.btnNext.TabIndex = 5;
+            this.btnNext.Text = "Next";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // btnPrevious
+            // 
+            this.btnPrevious.Location = new System.Drawing.Point(25, 329);
+            this.btnPrevious.Name = "btnPrevious";
+            this.btnPrevious.Size = new System.Drawing.Size(93, 46);
+            this.btnPrevious.TabIndex = 6;
+            this.btnPrevious.Text = "Previous";
+            this.btnPrevious.UseVisualStyleBackColor = true;
+            this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
+            // 
+            // lblTimer
+            // 
+            this.lblTimer.AutoSize = true;
+            this.lblTimer.Location = new System.Drawing.Point(632, 290);
+            this.lblTimer.Name = "lblTimer";
+            this.lblTimer.Size = new System.Drawing.Size(44, 16);
+            this.lblTimer.TabIndex = 7;
+            this.lblTimer.Text = "label1";
+            this.lblTimer.Click += new System.EventHandler(this.lblTimer_Click);
+            // 
+            // QuizTimer
+            // 
+            this.QuizTimer.Tick += new System.EventHandler(this.QuizTimer_Tick);
+            // 
+            // lblQuestionNo
+            // 
+            this.lblQuestionNo.AutoSize = true;
+            this.lblQuestionNo.Location = new System.Drawing.Point(74, 19);
+            this.lblQuestionNo.Name = "lblQuestionNo";
+            this.lblQuestionNo.Size = new System.Drawing.Size(44, 16);
+            this.lblQuestionNo.TabIndex = 8;
+            this.lblQuestionNo.Text = "label1";
+            // 
+            // lblTopic
+            // 
+            this.lblTopic.AutoSize = true;
+            this.lblTopic.Location = new System.Drawing.Point(22, 290);
+            this.lblTopic.Name = "lblTopic";
+            this.lblTopic.Size = new System.Drawing.Size(44, 16);
+            this.lblTopic.TabIndex = 9;
+            this.lblTopic.Text = "label1";
+            this.lblTopic.Click += new System.EventHandler(this.lblTopic_Click);
+            // 
+            // QuizForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblTopic);
+            this.Controls.Add(this.lblQuestionNo);
+            this.Controls.Add(this.lblTimer);
+            this.Controls.Add(this.btnPrevious);
+            this.Controls.Add(this.btnNext);
+            this.Controls.Add(this.rbOptionD);
+            this.Controls.Add(this.rbOptionC);
+            this.Controls.Add(this.rbOptionB);
+            this.Controls.Add(this.rbOptionA);
+            this.Controls.Add(this.lblQuestion);
+            this.Name = "QuizForm";
+            this.Text = "QuizForm";
+            this.Load += new System.EventHandler(this.QuizForm_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Label lblQuestion;
+        private System.Windows.Forms.RadioButton rbOptionA;
+        private System.Windows.Forms.RadioButton rbOptionB;
+        private System.Windows.Forms.RadioButton rbOptionC;
+        private System.Windows.Forms.RadioButton rbOptionD;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Button btnPrevious;
+        private System.Windows.Forms.Label lblTimer;
+        private System.Windows.Forms.Timer QuizTimer;
+        private System.Windows.Forms.Label lblQuestionNo;
+        private System.Windows.Forms.Label lblTopic;
+    }
+}
