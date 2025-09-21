@@ -38,9 +38,10 @@
             this.cmbTopics.FormattingEnabled = true;
             this.cmbTopics.Location = new System.Drawing.Point(212, 71);
             this.cmbTopics.Name = "cmbTopics";
-            this.cmbTopics.Size = new System.Drawing.Size(280, 27);
+            this.cmbTopics.Size = new System.Drawing.Size(320, 27);
             this.cmbTopics.TabIndex = 1;
             this.cmbTopics.Text = "Choose your Topic";
+            this.cmbTopics.SelectedIndexChanged += new System.EventHandler(this.cmbTopics_SelectedIndexChanged);
             // 
             // btnStartQuiz
             // 

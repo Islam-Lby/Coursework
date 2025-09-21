@@ -27,7 +27,7 @@ namespace Coursework
             }
 
             _selectedTopic = cmbTopics.SelectedItem.ToString(); // stores the selected topic
-            QuizForm quizForm = new QuizForm(_selectedTopic); // creates a new quiz form to answer questions
+            btnSubmitQuiz quizForm = new btnSubmitQuiz(_selectedTopic); // creates a new quiz form to answer questions
                                                               // based off the selected topic
             quizForm.Show(); // opens the quiz form with the selected topic questions being displayed
             this.Hide(); // hides the current form
@@ -36,11 +36,18 @@ namespace Coursework
 
         private void TopicSelectionForm_Load(object sender, EventArgs e)
         {
+            this.BackColor = System.Drawing.Color.DodgerBlue;
+
             cmbTopics.Items.Add("Web Technologies");
             cmbTopics.Items.Add("Compression Encryption and Hashing");
             cmbTopics.Items.Add("IDEs and their functions");
             cmbTopics.Items.Add("Structure and Function of the CPU");
             cmbTopics.Items.Add("Networks");
+        }
+
+        private void cmbTopics_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

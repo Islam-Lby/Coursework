@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
@@ -13,27 +14,29 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace Coursework
 {
-    public partial class QuizForm : Form
+    public partial class btnSubmitQuiz : Form
     {
         private List<Question> _questions; // variable that holds the filtered list of questions the user will actually see in the quiz
         private string[] _userAnswers; // stores the user answers
         private int _currentIndex; // The index of the question the user is currently on 
-        private int _timeLeft =2*60; // how long the user has to complete the quiz
+        private int _timeLeft =1*60; // how long the user has to complete the quiz
         private int score = 0; // initiaalise score variable to keep track of the score
-       // private bool quizSubmitted = false; // Tracks whether the user has submitted the quiz
-        public QuizForm(string topic)
+       private bool quizSubmitted = false; // Tracks whether the user has submitted the quiz
+        public btnSubmitQuiz(string topic)
         {
 
             InitializeComponent();
 
             
             _questions = LoadQuestionsFromCSV(topic); // the questions that have been loaded from the file based off user preference
+            ShuffleQuestions(_questions);
             _userAnswers = new string[_questions.Count];
             _currentIndex = 0;
             DisplayQuestion(_currentIndex); // Displays the question based on the question index
             QuizTimer.Interval = 1000; // the timer decrements by 1 second
             QuizTimer.Start(); // starts the timer
                                // btnSubmitQuiz.Click += btnSubmitQuiz_Click;
+           
 
         }
 
@@ -116,11 +119,13 @@ namespace Coursework
                 {
                     btnNext.Visible = true; // if the index of the current question is between the 1st question
                                             // and the penultimate question, then the 'next' button is made visible 
-                  
+                  btnSubmit.Visible = false;
                 }
+                
                 else
                 {
                     btnNext.Visible = false; // if not, it is not made visible
+                    btnSubmit.Visible = true;   
                 }
                 if (_currentIndex == 0)
                 {
@@ -132,12 +137,19 @@ namespace Coursework
                     rbOptionD.Checked = false;
 
                 }
-                else{btnPrevious.Visible = true;} // if not (if the user is anywhere between the 2nd question and the last question) then the 'previous' button is made visible
+                else
+                {
+                    btnPrevious.Visible = true;
+
+                } // if not (if the user is anywhere between the 2nd question and the last question) then the 'previous' button is made visible
+                
+                
+                
+               
                 
             }
         }
-        //btnSubmitQuiz.Visible = true;
-        // btnSubmitQuiz.Visible = false; // the submit button is made false
+        
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -203,7 +215,6 @@ namespace Coursework
                 }
                 
             }
-            MessageBox.Show($"Your score is {score} / {_questions.Count}"); // Outputs the score
         }
 
         private void lblTimer_Click(object sender, EventArgs e)
@@ -217,11 +228,22 @@ namespace Coursework
             int mins = _timeLeft / 60; // calculates minutes left
             int secs = _timeLeft % 60; // calculates seconds left
             lblTimer.Text = $"Time left: {mins} mins: {secs} secs"; // displays time left to complete the quiz
-            if (_timeLeft <= 0) //quizSubmitted == true
+            if (_timeLeft <= 0 || quizSubmitted == true)
             {
+                
                 QuizTimer.Stop(); // when timer hits 0... or if user submits the quiz
-                MarkQuiz(); // ... Quiz ie marrked
-                this.Close();
+                MarkQuiz(); // ... Quiz ie marked
+                this.Hide();
+                UserNames inputForm = new UserNames();
+                if (inputForm.ShowDialog() == DialogResult.OK)
+                {
+                    string username = inputForm.GetUserNames();
+                    SaveResult(username, score); // Save result
+                    leaderBoardForm LB_form = new leaderBoardForm();
+                    LB_form.Show();
+                }
+
+
             }
         }
 
@@ -230,44 +252,78 @@ namespace Coursework
 
         }
 
-        private void btnSubmitQuiz_Click(object sender, EventArgs e)
-        {
-           // quizSubmitted = true;
-            
-        }
+        
 
         private void QuizForm_Load(object sender, EventArgs e)
         {
+            this.BackColor = System.Drawing.Color.DodgerBlue;
+            lblQuestion.ForeColor = System.Drawing.Color.White;
+            rbOptionA.ForeColor = System.Drawing.Color.White;
+            rbOptionB.ForeColor = System.Drawing.Color.White;
+            rbOptionC.ForeColor = System.Drawing.Color.White;
+            rbOptionD.ForeColor = System.Drawing.Color.White;
+            lblTimer.ForeColor = System.Drawing.Color.White;
+            lblTopic.ForeColor = System.Drawing.Color.White;
+            lblQuestionNo.ForeColor = System.Drawing.Color.White;
+        }
+
+
+
+        private void SaveResult(string username, int score)
+        {
+            File.AppendAllText("scores.csv", username + "," + score + "\n");
             
         }
-        /*
-        private List<Question> ShuffleQuestions(List<Question> questionList1)
+
+
+
+
+        private void lblQuestion_Click(object sender, EventArgs e)
         {
-            // Create a new list to hold the shuffled questions
-            List<Question> shuffledList = new List<Question>();
 
-            // Create a Random object to generate random numbers
-            Random random = new Random();
+        }
 
-            // Loop while there are still questions left in the original list
-            while (questionList1.Count > 0)
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            quizSubmitted = true;
+            SaveUserAnswer();
+            MessageBox.Show($"Your score is {score} / {_questions.Count}"); // Outputs the score
+
+            this.Hide(); 
+            UserNames inputForm = new UserNames();
+            
+            if (inputForm.ShowDialog() == DialogResult.OK)
             {
-                // Pick a random index from the remaining questions
-                int index = random.Next(questionList1.Count);
-
-                // Get the question at that index
-                Question selectedQuestion = questionList1[index];
-
-                // Add it to the shuffled list
-                shuffledList.Add(selectedQuestion);
-
-                // Remove it from the original list so it's not picked again
-                questionList1.RemoveAt(index);
+                string username = inputForm.GetUserNames();
+                SaveResult(username, score);
+                leaderBoardForm LB_form = new leaderBoardForm();
+                LB_form.Show();
+                
+                
             }
+            else
+            {
+                MessageBox.Show("Quiz ended.");
+            }
+        }
+        
+    private List<Question> ShuffleQuestions(List<Question> questionList1)
+    {
 
-            // Return the shuffled list of questions
-            return shuffledList;
+        List<Question> shuffledList = new List<Question>();
+        Random random = new Random();
+        while (questionList1.Count > 0)
+        {
+            int index = random.Next(questionList1.Count);
 
-        }*/
+           Question selectedQuestion = questionList1[index];
+
+           shuffledList.Add(selectedQuestion);
+
+           questionList1.RemoveAt(index);
+        }
+        return shuffledList;
+
+}
     }
 }
