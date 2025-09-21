@@ -1,6 +1,6 @@
 ﻿namespace Coursework
 {
-    partial class QuizForm
+    partial class btnSubmitQuiz
     {
         /// <summary>
         /// Required designer variable.
@@ -40,16 +40,18 @@
             this.QuizTimer = new System.Windows.Forms.Timer(this.components);
             this.lblQuestionNo = new System.Windows.Forms.Label();
             this.lblTopic = new System.Windows.Forms.Label();
+            this.btnSubmit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblQuestion
             // 
             this.lblQuestion.AutoSize = true;
-            this.lblQuestion.Location = new System.Drawing.Point(107, 61);
+            this.lblQuestion.Location = new System.Drawing.Point(124, 63);
             this.lblQuestion.Name = "lblQuestion";
             this.lblQuestion.Size = new System.Drawing.Size(44, 16);
             this.lblQuestion.TabIndex = 0;
             this.lblQuestion.Text = "label1";
+            this.lblQuestion.Click += new System.EventHandler(this.lblQuestion_Click);
             // 
             // rbOptionA
             // 
@@ -148,11 +150,22 @@
             this.lblTopic.Text = "label1";
             this.lblTopic.Click += new System.EventHandler(this.lblTopic_Click);
             // 
-            // QuizForm
+            // btnSubmit
+            // 
+            this.btnSubmit.Location = new System.Drawing.Point(625, 395);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(111, 32);
+            this.btnSubmit.TabIndex = 10;
+            this.btnSubmit.Text = "Submit Quiz";
+            this.btnSubmit.UseVisualStyleBackColor = true;
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            // 
+            // btnSubmitQuiz
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.lblTopic);
             this.Controls.Add(this.lblQuestionNo);
             this.Controls.Add(this.lblTimer);
@@ -163,7 +176,7 @@
             this.Controls.Add(this.rbOptionB);
             this.Controls.Add(this.rbOptionA);
             this.Controls.Add(this.lblQuestion);
-            this.Name = "QuizForm";
+            this.Name = "btnSubmitQuiz";
             this.Text = "QuizForm";
             this.Load += new System.EventHandler(this.QuizForm_Load);
             this.ResumeLayout(false);
@@ -184,5 +197,6 @@
         private System.Windows.Forms.Timer QuizTimer;
         private System.Windows.Forms.Label lblQuestionNo;
         private System.Windows.Forms.Label lblTopic;
+        private System.Windows.Forms.Button btnSubmit;
     }
 }
