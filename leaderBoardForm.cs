@@ -22,63 +22,57 @@ namespace Coursework
 
         private void leaderBoardForm_Load(object sender, EventArgs e)
         {
-            this.BackColor = System.Drawing.Color.DodgerBlue;
+            this.BackColor = System.Drawing.Color.DodgerBlue; // sets the background colour to 'DodgerBlue'
 
         }
 
         private void DisplayScores()
         {
 
-            // Load all results from file
-            List<Results> allResults = LoadResults();
+            List<Results> allResults = LoadResults(); // creates a new instance of the Results class
 
-            // Create a Leaderboard object and add results
-            Leader_board board = new Leader_board();
+            Leader_board board = new Leader_board(); // creates a new instance of the Leaderboard class
             foreach (Results r in allResults)
             {
-                board.AddResults(r);
+                board.AddResults(r); // Adds the results stored from the CSV file
             }
-            board.SortResults();
-            List<Results> sortedResults = board.GetResults();
+            board.SortResults(); // Sorts the results using an insertion sort in descending order
+            List<Results> sortedResults = board.GetResults(); 
 
-            // Display in listbox
             foreach (Results r in sortedResults)
             {
-                lstScores.Items.Add(r.GetuserName() + " - " + r.Getscore());
+                lstScores.Items.Add(r.GetuserName() + " - " + r.Getscore()); // outputs the usernames and scores into a listbox
             }
 
         }
 
         private List<Results> LoadResults()
         {
-            List<Results> results = new List<Results>();
+            List<Results> results = new List<Results>(); // stores the list of results
 
             try
             {
-                // Open the file to read
-                StreamReader reader = new StreamReader("scores.CSV");
+                StreamReader reader = new StreamReader("scores.CSV"); // opens and reads in the file called "scores.csv
 
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    // Split the line by comma
-                    string[] parts = line.Split(',');
+                    string[] parts = line.Split(','); // splits each line of the file based on the comma
 
-                    // Get username and score
                     string username = parts[0];
                     int score = int.Parse(parts[1]);
 
-                    // Create a Result and add to list
-                    Results r = new Results(username, score);
-                    results.Add(r);
+                    Results r = new Results(username, score); // adds BOTH the score and the username into 1 object to store on a single line 
+                    results.Add(r); // adds to the list of results
                 }
 
-                // Close the file
-                reader.Close();
+                reader.Close(); // closes the file
             }
-            catch (Exception)
+            catch 
+
             {
-                // If file doesn't exist or has errors, just return empty list
+                MessageBox.Show("File doesn't exist"); // if the file doesn't exist, the program stops
+                Environment.Exit(0);
             }
 
             return results;

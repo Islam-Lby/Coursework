@@ -22,14 +22,13 @@ namespace Coursework
         private int _timeLeft =1*60; // how long the user has to complete the quiz
         private int score = 0; // initiaalise score variable to keep track of the score
        private bool quizSubmitted = false; // Tracks whether the user has submitted the quiz
-        public btnSubmitQuiz(string topic)
+        public btnSubmitQuiz(string topic, string difficulty)
         {
 
             InitializeComponent();
 
             
-            _questions = LoadQuestionsFromCSV(topic); // the questions that have been loaded from the file based off user preference
-            ShuffleQuestions(_questions);
+            _questions = ShuffleQuestions(LoadQuestionsFromCSV(topic, difficulty)); // the questions that have been loaded from the file based off user preference
             _userAnswers = new string[_questions.Count];
             _currentIndex = 0;
             DisplayQuestion(_currentIndex); // Displays the question based on the question index
@@ -40,7 +39,7 @@ namespace Coursework
 
         }
 
-        public List<Question> LoadQuestionsFromCSV(string topic)
+        public List<Question> LoadQuestionsFromCSV(string topic, string difficulty)
         {
             string line;
             List<Question> questionList = new List<Question>(); // temporary variable used to TEMPORARILY hold ALL questions
@@ -53,23 +52,27 @@ namespace Coursework
                 {
                     string[] values = line.Split(','); // splits each line of the file based on the comma
                                       
-                    if (values[0] == topic)
-                    {
-                        string questionText = values[1]; // the question is in the 2nd column of the
+                    
+                       string _difficulty = values[0];
+                         string _topic = values[1]; // the question is in the 2nd column of the
                                                          // array 'values', similar to the format of the file 
+                        string questionText = values[2];
                         string[] options = new string[4];
-                        options[0] = values[2]; // stores 1st option
-                        options[1] = values[3]; // stores 2nd option
-                        options[2] = values[4]; // stores 3rd option
-                        options[3] = values[5]; // stores 4th option
-                        string answer = values[6]; // the actual answer to the question is stored in the final column.
-                        Question q = new Question(topic, questionText, options, answer); // create a new
-                                                                                         // question object that stores the content of
-                                                                                         // the CSV file in the same
-                                                                                         // format (order) as the CSV file
-                        questionList.Add(q); // Adds the question to the list if it is relevant to the selected topic
+                        options[0] = values[3]; // stores 1st option
+                        options[1] = values[4]; // stores 2nd option
+                        options[2] = values[5]; // stores 3rd option
+                        options[3] = values[6]; // stores 4th option
+                        string answer = values[7]; // the actual answer to the question is stored in the final column.
 
+                    if (_difficulty == difficulty && _topic == topic)
+                    {
+                        Question q = new Question(_difficulty, _topic, questionText, options, answer); // create a new
+                                                                                                     // question object that stores the content of
+                                                                                                     // the CSV file in the same
+                                                                                                     // format (order) as the CSV file
+                        questionList.Add(q); // Adds the question to the list if it is relevant to the selected topic
                     }
+                    
                 }
             }
             catch 
@@ -88,10 +91,11 @@ namespace Coursework
             if (index >= 0 && index < _questions.Count) // checks that the index of the question
                                                         // in the list is within the range of questions
             {
+
                 Question question = _questions[index]; // Get's the current question from the list 
+                lblDifficulty.Text = question.GetDifficulty(); // get's the type of difficulty of the question the user is answering
                 lblQuestion.Text = question.GetText(); // this label shows the current question
                 string[] currentOptions = question.GetOptions(); // get's the answer options 
-                
                 rbOptionA.Text = currentOptions[0]; // Displays 1st option 
                 rbOptionB.Text = currentOptions[1]; // Displays 2nd option 
                 rbOptionC.Text =  currentOptions[2]; // Displays 3rd option 
@@ -121,7 +125,6 @@ namespace Coursework
                                             // and the penultimate question, then the 'next' button is made visible 
                   btnSubmit.Visible = false;
                 }
-                
                 else
                 {
                     btnNext.Visible = false; // if not, it is not made visible
@@ -137,13 +140,9 @@ namespace Coursework
                     rbOptionD.Checked = false;
 
                 }
-                else
-                {
-                    btnPrevious.Visible = true;
-
-                } // if not (if the user is anywhere between the 2nd question and the last question) then the 'previous' button is made visible
+                else { btnPrevious.Visible = true; } // if not (if the user is anywhere between the 2nd question and the last question) then the 'previous' button is made visible)
                 
-                
+                //UpdateNextButton();
                 
                
                 
@@ -158,6 +157,7 @@ namespace Coursework
         private void btnNext_Click(object sender, EventArgs e)
         {
             SaveUserAnswer(); // when user moves forward, user answer is saved
+
             if (_currentIndex < _questions.Count - 1) // if index of the question is in the question list range.
             {
                 _currentIndex++; // if user clicks on 'Next button'...
@@ -176,6 +176,23 @@ namespace Coursework
                 
             }
         }
+
+        private void UpdateNextButton()
+        {
+            if (rbOptionA.Checked || rbOptionB.Checked || rbOptionC.Checked || rbOptionD.Checked)
+            {
+                btnNext.Enabled = true;
+                btnNext.BackColor = SystemColors.Control;
+            }
+            else
+            {
+                btnNext.Enabled = false;
+                btnNext.BackColor = Color.Silver;
+            }
+        }
+       
+
+
         private void SaveUserAnswer() // saves user answer
         {
             if (rbOptionA.Checked)
@@ -202,6 +219,7 @@ namespace Coursework
                                                   // saves the answer as an empty string (not answered)
 
             }
+
         }
 
         private void MarkQuiz()
@@ -237,10 +255,10 @@ namespace Coursework
                 UserNames inputForm = new UserNames();
                 if (inputForm.ShowDialog() == DialogResult.OK)
                 {
-                    string username = inputForm.GetUserNames();
+                    string username = inputForm.GetUserNames(); // retrieves username from the Username form
                     SaveResult(username, score); // Save result
                     leaderBoardForm LB_form = new leaderBoardForm();
-                    LB_form.Show();
+                    LB_form.Show(); // shows leaderboard form
                 }
 
 
@@ -271,7 +289,7 @@ namespace Coursework
 
         private void SaveResult(string username, int score)
         {
-            File.AppendAllText("scores.csv", username + "," + score + "\n");
+            File.AppendAllText("scores.csv", username + "," + score + "\n"); // adds the results and username into a file labelled 'scores.csv'
             
         }
 
@@ -287,8 +305,6 @@ namespace Coursework
         {
             quizSubmitted = true;
             SaveUserAnswer();
-            MessageBox.Show($"Your score is {score} / {_questions.Count}"); // Outputs the score
-
             this.Hide(); 
             UserNames inputForm = new UserNames();
             
@@ -307,23 +323,51 @@ namespace Coursework
             }
         }
         
-    private List<Question> ShuffleQuestions(List<Question> questionList1)
+    private List<Question> ShuffleQuestions(List<Question> _OriginalQuestionList)
     {
 
-        List<Question> shuffledList = new List<Question>();
-        Random random = new Random();
-        while (questionList1.Count > 0)
+        List<Question> shuffledList = new List<Question>(); 
+        Random random = new Random(); 
+        while (_OriginalQuestionList.Count > 0) 
         {
-            int index = random.Next(questionList1.Count);
+            int index = random.Next(_OriginalQuestionList.Count); //Generates a random number to display questions in a random order
 
-           Question selectedQuestion = questionList1[index];
+            Question selectedQuestion = _OriginalQuestionList[index]; // selects a random question from the list
 
-           shuffledList.Add(selectedQuestion);
+           shuffledList.Add(selectedQuestion); // Adds the question from a specific position to the Randomised question list
 
-           questionList1.RemoveAt(index);
+           _OriginalQuestionList.RemoveAt(index);  // question is removed so that it doesn't get picked again
         }
-        return shuffledList;
+        return shuffledList; //Returns the randomised question list
 
 }
+
+        private void rbOptionA_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateNextButton();
+
+        }
+
+        private void rbOptionB_CheckedChanged(object sender, EventArgs e)
+        {
+           UpdateNextButton();
+        }
+
+        private void rbOptionC_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateNextButton();
+
+        }
+
+        private void rbOptionD_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateNextButton();
+
+        }
+
+        private void lblDifficulty_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
