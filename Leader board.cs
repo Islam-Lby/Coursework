@@ -8,7 +8,7 @@ namespace Coursework
 {
     internal class Leader_board
     {
-        private List<Results> _results;
+        private List<Results> _results; 
 
         public Leader_board()
         {
@@ -17,7 +17,7 @@ namespace Coursework
 
         public void AddResults(Results result)
         {
-            _results.Add(result);
+            _results.Add(result); // adds the res
         }
 
         public List<Results> GetResults()
@@ -25,7 +25,7 @@ namespace Coursework
             return _results;
         }
 
-        public void SortResults()
+        public void SortResults() // insertion sort to display usernames 
         {
             for (int i = 1; i < _results.Count; i++)
             {

@@ -8,19 +8,25 @@ namespace Coursework
 {
     public class Question // Stores all the details about the quiz
     {
-        private string _topic;          
+        private string _topic;
         private string _text;
         private string[] _options;
-        private string _answer;         
+        private string _answer;
+        private string _difficulty;
         // ^^ Quiz attributes
-        public Question(string topic, string text, string[] options, string answer) // constructor passing in the attributes, in similar format to the quiz file itself.
+        public Question(string difficulty, string topic, string text, string[] options, string answer) // constructor passing in the attributes, in similar format to the quiz file itself.
         {
+            _difficulty = difficulty;
             _topic = topic;
             _text = text;
             _options = options;
             _answer = answer;
+            
         }
-
+        public string GetDifficulty()
+        {
+            return _difficulty;
+        }
         public string GetTopic()
         {
             return _topic;
@@ -40,5 +46,6 @@ namespace Coursework
         {
             return _answer;
         }
+        
     }
 }

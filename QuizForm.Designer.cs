@@ -41,6 +41,7 @@
             this.lblQuestionNo = new System.Windows.Forms.Label();
             this.lblTopic = new System.Windows.Forms.Label();
             this.btnSubmit = new System.Windows.Forms.Button();
+            this.lblDifficulty = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblQuestion
@@ -63,6 +64,7 @@
             this.rbOptionA.TabStop = true;
             this.rbOptionA.Text = "radioButton1";
             this.rbOptionA.UseVisualStyleBackColor = true;
+            this.rbOptionA.CheckedChanged += new System.EventHandler(this.rbOptionA_CheckedChanged);
             // 
             // rbOptionB
             // 
@@ -74,6 +76,7 @@
             this.rbOptionB.TabStop = true;
             this.rbOptionB.Text = "radioButton1";
             this.rbOptionB.UseVisualStyleBackColor = true;
+            this.rbOptionB.CheckedChanged += new System.EventHandler(this.rbOptionB_CheckedChanged);
             // 
             // rbOptionC
             // 
@@ -85,6 +88,7 @@
             this.rbOptionC.TabStop = true;
             this.rbOptionC.Text = "radioButton1";
             this.rbOptionC.UseVisualStyleBackColor = true;
+            this.rbOptionC.CheckedChanged += new System.EventHandler(this.rbOptionC_CheckedChanged);
             // 
             // rbOptionD
             // 
@@ -96,6 +100,7 @@
             this.rbOptionD.TabStop = true;
             this.rbOptionD.Text = "radioButton1";
             this.rbOptionD.UseVisualStyleBackColor = true;
+            this.rbOptionD.CheckedChanged += new System.EventHandler(this.rbOptionD_CheckedChanged);
             // 
             // btnNext
             // 
@@ -143,7 +148,7 @@
             // lblTopic
             // 
             this.lblTopic.AutoSize = true;
-            this.lblTopic.Location = new System.Drawing.Point(22, 290);
+            this.lblTopic.Location = new System.Drawing.Point(22, 253);
             this.lblTopic.Name = "lblTopic";
             this.lblTopic.Size = new System.Drawing.Size(44, 16);
             this.lblTopic.TabIndex = 9;
@@ -160,11 +165,22 @@
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
+            // lblDifficulty
+            // 
+            this.lblDifficulty.AutoSize = true;
+            this.lblDifficulty.Location = new System.Drawing.Point(22, 290);
+            this.lblDifficulty.Name = "lblDifficulty";
+            this.lblDifficulty.Size = new System.Drawing.Size(44, 16);
+            this.lblDifficulty.TabIndex = 11;
+            this.lblDifficulty.Text = "label1";
+            this.lblDifficulty.Click += new System.EventHandler(this.lblDifficulty_Click);
+            // 
             // btnSubmitQuiz
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblDifficulty);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.lblTopic);
             this.Controls.Add(this.lblQuestionNo);
@@ -198,5 +214,6 @@
         private System.Windows.Forms.Label lblQuestionNo;
         private System.Windows.Forms.Label lblTopic;
         private System.Windows.Forms.Button btnSubmit;
+        private System.Windows.Forms.Label lblDifficulty;
     }
 }

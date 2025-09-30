@@ -12,7 +12,7 @@ namespace Coursework
 {
     public partial class UserNames : Form
     {
-        private string userName;
+        private string userName; // this variable stores the username of the user
         public UserNames()
         {
             InitializeComponent();
@@ -24,10 +24,10 @@ namespace Coursework
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            userName = txtName.Text;
-            if (!string.IsNullOrEmpty(userName))
+            userName = txtName.Text; // the information in the text box is stoerd as the username of the user 
+            if (!string.IsNullOrEmpty(userName)) // checks if the text box is empty
             {
-                this.DialogResult = DialogResult.OK;
+                this.DialogResult = DialogResult.OK; // indicates that the user clicked OK
                 this.Close();
             }
             else { MessageBox.Show("Please enter a name"); return; }
