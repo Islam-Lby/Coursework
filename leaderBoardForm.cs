@@ -37,12 +37,17 @@ namespace Coursework
                 board.AddResults(r); // Adds the results stored from the CSV file
             }
             board.SortResults(); // Sorts the results using an insertion sort in descending order
-            List<Results> sortedResults = board.GetResults(); 
+            List<Results> sortedResults = board.GetResults();
 
-            foreach (Results r in sortedResults)
+            for (int i = 0; i < sortedResults.Count; i++)
             {
-                lstScores.Items.Add(r.GetuserName() + " - " + r.Getscore()); // outputs the usernames and scores into a listbox
+                Results r = sortedResults[i];
+                string rank = (i + 1) + ". "; 
+            
+                lstScores.Items.Add(rank + r.GetuserName() + " - " + r.Getscore()); // outputs the score in a list box with a number to rank the scoers '1st, 2nd 3rd' etc
             }
+
+
 
         }
 

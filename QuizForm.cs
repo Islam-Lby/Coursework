@@ -53,10 +53,9 @@ namespace Coursework
                     string[] values = line.Split(','); // splits each line of the file based on the comma
                                       
                     
-                       string _difficulty = values[0];
-                         string _topic = values[1]; // the question is in the 2nd column of the
-                                                         // array 'values', similar to the format of the file 
-                        string questionText = values[2];
+                       string _difficulty = values[0]; // difficulty is stored in the 1st column of the csv file
+                         string _topic = values[1]; // the topic is in the 2nd column of the csv file
+                        string questionText = values[2]; //the topic is in the 3rd column of the CSV file
                         string[] options = new string[4];
                         options[0] = values[3]; // stores 1st option
                         options[1] = values[4]; // stores 2nd option
@@ -66,7 +65,7 @@ namespace Coursework
 
                     if (_difficulty == difficulty && _topic == topic)
                     {
-                        Question q = new Question(_difficulty, _topic, questionText, options, answer); // create a new
+                        Question q = new Question(difficulty, topic, questionText, options, answer); // create a new
                                                                                                      // question object that stores the content of
                                                                                                      // the CSV file in the same
                                                                                                      // format (order) as the CSV file
@@ -233,6 +232,7 @@ namespace Coursework
                 }
                 
             }
+            
         }
 
         private void lblTimer_Click(object sender, EventArgs e)
@@ -250,7 +250,7 @@ namespace Coursework
             {
                 
                 QuizTimer.Stop(); // when timer hits 0... or if user submits the quiz
-                MarkQuiz(); // ... Quiz ie marked
+                MarkQuiz(); // ... Quiz is marked
                 this.Hide();
                 UserNames inputForm = new UserNames();
                 if (inputForm.ShowDialog() == DialogResult.OK)
@@ -305,22 +305,7 @@ namespace Coursework
         {
             quizSubmitted = true;
             SaveUserAnswer();
-            this.Hide(); 
-            UserNames inputForm = new UserNames();
-            
-            if (inputForm.ShowDialog() == DialogResult.OK)
-            {
-                string username = inputForm.GetUserNames();
-                SaveResult(username, score);
-                leaderBoardForm LB_form = new leaderBoardForm();
-                LB_form.Show();
-                
-                
-            }
-            else
-            {
-                MessageBox.Show("Quiz ended.");
-            }
+            this.Hide();
         }
         
     private List<Question> ShuffleQuestions(List<Question> _OriginalQuestionList)
