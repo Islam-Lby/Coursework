@@ -17,7 +17,7 @@ namespace Coursework
 
         public void AddResults(Results result)
         {
-            _results.Add(result); // adds the res
+            _results.Add(result); // adds the results to a list which can then be used to display leaderboardI 
         }
 
         public List<Results> GetResults()
