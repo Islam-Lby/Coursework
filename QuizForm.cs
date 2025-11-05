@@ -19,23 +19,28 @@ namespace Coursework
         private List<Question> _questions; // variable that holds the filtered list of questions the user will actually see in the quiz
         private string[] _userAnswers; // stores the user answers
         private int _currentIndex; // The index of the question the user is currently on 
-        private int _timeLeft =1*60; // how long the user has to complete the quiz
+        private int _timeLeft = 30 * 60; // how long the user has to complete the quiz
         private int score = 0; // initiaalise score variable to keep track of the score
-       private bool quizSubmitted = false; // Tracks whether the user has submitted the quiz
+        private bool quizSubmitted = false; // Tracks whether the user has submitted the quiz
+        private List<Question> _flaggedQuestions;
+        private bool[] isFlagged;
+        private int _reviewIndex;
         public btnSubmitQuiz(string topic, string difficulty)
         {
 
             InitializeComponent();
 
-            
+
             _questions = ShuffleQuestions(LoadQuestionsFromCSV(topic, difficulty)); // the questions that have been loaded from the file based off user preference
             _userAnswers = new string[_questions.Count];
             _currentIndex = 0;
+            _flaggedQuestions = new List<Question>();
+            isFlagged = new bool[_questions.Count];
             DisplayQuestion(_currentIndex); // Displays the question based on the question index
             QuizTimer.Interval = 1000; // the timer decrements by 1 second
             QuizTimer.Start(); // starts the timer
                                // btnSubmitQuiz.Click += btnSubmitQuiz_Click;
-           
+            
 
         }
 
@@ -51,30 +56,33 @@ namespace Coursework
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] values = line.Split(','); // splits each line of the file based on the comma
-                                      
-                    
-                       string _difficulty = values[0]; // difficulty is stored in the 1st column of the csv file
-                         string _topic = values[1]; // the topic is in the 2nd column of the csv file
-                        string questionText = values[2]; //the topic is in the 3rd column of the CSV file
-                        string[] options = new string[4];
-                        options[0] = values[3]; // stores 1st option
-                        options[1] = values[4]; // stores 2nd option
-                        options[2] = values[5]; // stores 3rd option
-                        options[3] = values[6]; // stores 4th option
-                        string answer = values[7]; // the actual answer to the question is stored in the final column.
+
+
+                    string _difficulty = values[0]; // difficulty is stored in the 1st column of the csv file
+                    string _topic = values[1]; // the topic is in the 2nd column of the csv file
+                    string questionText = values[2]; //the topic is in the 3rd column of the CSV file
+                    string[] options = new string[4];
+                    options[0] = values[3]; // stores 1st option
+                    options[1] = values[4]; // stores 2nd option
+                    options[2] = values[5]; // stores 3rd option
+                    options[3] = values[6]; // stores 4th option
+                    string answer = values[7]; // the actual answer to the question is stored in the final column.
+
+
+
 
                     if (_difficulty == difficulty && _topic == topic)
                     {
-                        Question q = new Question(difficulty, topic, questionText, options, answer); // create a new
-                                                                                                     // question object that stores the content of
-                                                                                                     // the CSV file in the same
-                                                                                                     // format (order) as the CSV file
+                        Question q = new Question(_difficulty, _topic, questionText, options, answer); // create a new
+                                                                                                       // question object that stores the content of
+                                                                                                       // the CSV file in the same
+                                                                                                       // format (order) as the CSV file
                         questionList.Add(q); // Adds the question to the list if it is relevant to the selected topic
                     }
-                    
+
                 }
             }
-            catch 
+            catch
             {
                 MessageBox.Show("Error loading questions"); // if file doesn't exist, this message is output
                 Environment.Exit(1); // program stops
@@ -87,6 +95,18 @@ namespace Coursework
             rbOptionB.Checked = false;
             rbOptionC.Checked = false;
             rbOptionD.Checked = false;
+            btnReviewNext.Visible = false;
+            btnReviewPrevious.Visible = false;
+
+            if (isFlagged[index])
+            {
+                btnFlag.Text = "Unflag";
+            }
+            else
+            {
+                btnFlag.Text = "Flag Question";
+            }
+
             if (index >= 0 && index < _questions.Count) // checks that the index of the question
                                                         // in the list is within the range of questions
             {
@@ -97,9 +117,9 @@ namespace Coursework
                 string[] currentOptions = question.GetOptions(); // get's the answer options 
                 rbOptionA.Text = currentOptions[0]; // Displays 1st option 
                 rbOptionB.Text = currentOptions[1]; // Displays 2nd option 
-                rbOptionC.Text =  currentOptions[2]; // Displays 3rd option 
-                rbOptionD.Text =  currentOptions[3]; // Displays 4th option 
-                lblQuestionNo.Text = $"Question {_currentIndex+1}/{_questions.Count}"; // Number to represent the question
+                rbOptionC.Text = currentOptions[2]; // Displays 3rd option 
+                rbOptionD.Text = currentOptions[3]; // Displays 4th option 
+                lblQuestionNo.Text = $"Question {_currentIndex + 1}/{_questions.Count}"; // Number to represent the question
                 lblTopic.Text = $"Topic: {question.GetTopic()}"; // Displays the topic the user has chosen. 
                 string saved = _userAnswers[index]; // allows the user to change their answers.
                 if (saved == currentOptions[0])
@@ -122,12 +142,14 @@ namespace Coursework
                 {
                     btnNext.Visible = true; // if the index of the current question is between the 1st question
                                             // and the penultimate question, then the 'next' button is made visible 
-                  btnSubmit.Visible = false;
+                    btnSubmit.Visible = false;
                 }
                 else
                 {
                     btnNext.Visible = false; // if not, it is not made visible
-                    btnSubmit.Visible = true;   
+                    btnSubmit.Visible = true;
+                    
+
                 }
                 if (_currentIndex == 0)
                 {
@@ -140,14 +162,136 @@ namespace Coursework
 
                 }
                 else { btnPrevious.Visible = true; } // if not (if the user is anywhere between the 2nd question and the last question) then the 'previous' button is made visible)
+                /*if (isFlagged[_currentIndex])
+                {
+                    btnFlag.Text = "Unflag";
+
+                }
+                else
+                {
+                    btnFlag.Text = "Flag";
+                }*/
                 
-                //UpdateNextButton();
-                
-               
-                
+
+
+                UpdateNextButton();
+
+
+
             }
         }
-        
+
+        private void StartReviewMode()
+        {
+            _reviewIndex = 0; // when 
+            ShowReviewScreen();
+        }
+
+        private void ShowReviewScreen()
+        {
+            rbOptionA.Checked = false; 
+            rbOptionB.Checked = false;
+            rbOptionC.Checked = false;
+            rbOptionD.Checked = false;
+            // all radio buttons are unchecked before the user answers any question
+            if (_reviewIndex >= 0 && _reviewIndex < _flaggedQuestions.Count)
+            {
+                Question reviewQs = _flaggedQuestions[_reviewIndex]; // list storing the questions that have been flagged by the user.
+                string[] flaggedQuestionOptions = reviewQs.GetOptions(); // gets the options (first option, 2nd, 3rd etc..)
+                rbOptionA.Text = flaggedQuestionOptions[0]; // Displays 1st option 
+                rbOptionB.Text = flaggedQuestionOptions[1]; // Displays 2nd option 
+                rbOptionC.Text = flaggedQuestionOptions[2]; // Displays 3rd option 
+                rbOptionD.Text = flaggedQuestionOptions[3]; // Displays 4th option
+                lblQuestionNo.Text = $"Review: {_reviewIndex + 1}/{_flaggedQuestions.Count}"; // counter to indicate the index of the QUESTIONS THAT HAVE BEEN FLAGGED.
+                lblQuestion.Text = reviewQs.GetText(); // displays the question of the question that have been flagged one at a time
+                lblTopic.Text = $"Topic: {reviewQs.GetTopic()}"; // displays the topic of the flagged questions
+                lblDifficulty.Text = reviewQs.GetDifficulty(); // displays the difficulty of the flagged question (the difficulty of the topic the user has chosen)
+
+                if ((_reviewIndex+1) < _flaggedQuestions.Count)
+                {
+                    btnReviewNext.Visible = true; // whilt the question the user (while viewing their flagged questions)... 
+                    btnSubmit.Visible = false; //... is on isn't the last question (ie the 1st question to penultimate question), the Next button specific to the reviewing section is shown and the submit button 
+                    // isn't made visible.
+
+                }
+                else if (_reviewIndex == _flaggedQuestions.Count - 1)
+                {
+                    btnReviewNext.Visible = false; // if the user is on the last question...
+                    btnSubmit.Visible = true; //... the next button WITHIN the reviewing of the flagged questions is made invisible and the submit button is made visible. 
+
+                }
+                if (_reviewIndex == 0)
+                {
+                   btnReviewPrevious.Visible = false; // if the index of the current question is at the
+                                                      // start (the user is on the 1st question) then the 'previous' button isn't visible
+                    rbOptionA.Checked = false;
+                    rbOptionB.Checked = false;
+                    rbOptionC.Checked = false;
+                    rbOptionD.Checked = false;
+                    // sll radio buttons are unchecked
+                }
+                else { btnReviewPrevious.Visible = true; } // if not, then the previous button is made visible, allowing the user to move back a question if they need to
+
+                string savedAnswer = GetSavedAnswer(reviewQs);
+                if (savedAnswer == rbOptionA.Text)
+                {
+                    rbOptionA.Checked = true; // if users previous option was option A, then option A is saved when they move back a question
+                }
+                else if (savedAnswer == rbOptionB.Text)
+                {
+                    rbOptionB.Checked = true; // if users previous option was option B, then option C is saved when they move back a question
+                }
+                else if (savedAnswer == rbOptionC.Text)
+                {
+                    rbOptionC.Checked = true; // if users previous option was option c, then option C is saved when they move back a question
+                }
+                else if (savedAnswer == rbOptionD.Text)
+                {
+                    rbOptionD.Checked = true;// if users previous option was option D, then option D is saved when they move back a question
+                }
+                else
+                {
+                    rbOptionA.Checked = false;
+                    rbOptionB.Checked = false;
+                    rbOptionC.Checked = false;
+                    rbOptionD.Checked = false;
+                }
+
+            }
+
+
+        }
+
+        private string GetSavedAnswer(Question q)
+        {
+            if (_reviewIndex >= 0 && _reviewIndex < _userAnswers.Length) // if a user is reviewing a question, check if it has already been answered
+            { return _userAnswers[_reviewIndex]; } // returns user's saved answer
+            return ""; // an empty string is returned if no option is selected
+        }
+
+        private void SaveReviewAnswer()
+        {
+                if (rbOptionA.Checked)
+                {
+                    _userAnswers[_reviewIndex] = rbOptionA.Text; // if first option was selected, then the first option  is saved
+
+                }
+                else if (rbOptionB.Checked)
+                {
+                    _userAnswers[_reviewIndex] = rbOptionB.Text; // if 2nd option was selected then the 2nd option is saved
+                }
+                else if (rbOptionC.Checked)
+                {
+                    _userAnswers[_reviewIndex] = rbOptionC.Text; // if 3rd option was selected, then the 3rd option is saved
+                }
+                else if (rbOptionD.Checked)
+                {
+                    _userAnswers[_reviewIndex] = rbOptionD.Text; // if 4th option was selected, the 4th option is saved
+                }
+                else _userAnswers[_reviewIndex] = ""; // if nothing was selected, an empty string is saved
+            
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -162,7 +306,7 @@ namespace Coursework
                 _currentIndex++; // if user clicks on 'Next button'...
                 DisplayQuestion(_currentIndex); //...the next question is displayed
             }
-
+            
         }
 
         private void btnPrevious_Click(object sender, EventArgs e)
@@ -172,7 +316,7 @@ namespace Coursework
             {
                 _currentIndex--; // if user clicks on previous button...
                 DisplayQuestion(_currentIndex); // ... display the previous question
-                
+
             }
         }
 
@@ -189,7 +333,7 @@ namespace Coursework
                 btnNext.BackColor = Color.Silver;
             }
         }
-       
+
 
 
         private void SaveUserAnswer() // saves user answer
@@ -230,9 +374,9 @@ namespace Coursework
                 {
                     score++; // if the user answer is equal to the answer stored in the file, the sccore is incremented
                 }
-                
+
             }
-            
+
         }
 
         private void lblTimer_Click(object sender, EventArgs e)
@@ -248,18 +392,16 @@ namespace Coursework
             lblTimer.Text = $"Time left: {mins} mins: {secs} secs"; // displays time left to complete the quiz
             if (_timeLeft <= 0 || quizSubmitted == true)
             {
-                
+
                 QuizTimer.Stop(); // when timer hits 0... or if user submits the quiz
                 MarkQuiz(); // ... Quiz is marked
+                Results result = new Results(User.uName, score);
+                SaveResult(User.uName, score);
+                leaderBoardForm lbForm = new leaderBoardForm();
+                lbForm.Show();
                 this.Hide();
-                UserNames inputForm = new UserNames();
-                if (inputForm.ShowDialog() == DialogResult.OK)
-                {
-                    string username = inputForm.GetUserNames(); // retrieves username from the Username form
-                    SaveResult(username, score); // Save result
-                    leaderBoardForm LB_form = new leaderBoardForm();
-                    LB_form.Show(); // shows leaderboard form
-                }
+
+
 
 
             }
@@ -270,7 +412,7 @@ namespace Coursework
 
         }
 
-        
+
 
         private void QuizForm_Load(object sender, EventArgs e)
         {
@@ -289,8 +431,9 @@ namespace Coursework
 
         private void SaveResult(string username, int score)
         {
-            File.AppendAllText("scores.csv", username + "," + score + "\n"); // adds the results and username into a file labelled 'scores.csv'
-            
+            StreamWriter writeScoresTofile = File.AppendText("scores.csv"); // adds the username and results into a file labelled 'scores.csv'
+            writeScoresTofile.WriteLine(username + ',' + score);
+            writeScoresTofile.Close();
         }
 
 
@@ -307,25 +450,25 @@ namespace Coursework
             SaveUserAnswer();
             this.Hide();
         }
-        
-    private List<Question> ShuffleQuestions(List<Question> _OriginalQuestionList)
-    {
 
-        List<Question> shuffledList = new List<Question>(); 
-        Random random = new Random(); 
-        while (_OriginalQuestionList.Count > 0) 
+        private List<Question> ShuffleQuestions(List<Question> _OriginalQuestionList)
         {
-            int index = random.Next(_OriginalQuestionList.Count); //Generates a random number to display questions in a random order
 
-            Question selectedQuestion = _OriginalQuestionList[index]; // selects a random question from the list
+            List<Question> shuffledList = new List<Question>();
+            Random random = new Random();
+            while (_OriginalQuestionList.Count > 0)
+            {
+                int index = random.Next(_OriginalQuestionList.Count); //Generates a random number to display questions in a random order
 
-           shuffledList.Add(selectedQuestion); // Adds the question from a specific position to the Randomised question list
+                Question selectedQuestion = _OriginalQuestionList[index]; // selects a random question from the list
 
-           _OriginalQuestionList.RemoveAt(index);  // question is removed so that it doesn't get picked again
+                shuffledList.Add(selectedQuestion); // Adds the question from a specific position to the Randomised question list
+
+                _OriginalQuestionList.RemoveAt(index);  // question is removed so that it doesn't get picked again
+            }
+            return shuffledList; //Returns the randomised question list
+
         }
-        return shuffledList; //Returns the randomised question list
-
-}
 
         private void rbOptionA_CheckedChanged(object sender, EventArgs e)
         {
@@ -335,7 +478,7 @@ namespace Coursework
 
         private void rbOptionB_CheckedChanged(object sender, EventArgs e)
         {
-           UpdateNextButton();
+            UpdateNextButton();
         }
 
         private void rbOptionC_CheckedChanged(object sender, EventArgs e)
@@ -353,6 +496,81 @@ namespace Coursework
         private void lblDifficulty_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnFlag_Click(object sender, EventArgs e)
+        {
+            if (_currentIndex < 0 || _currentIndex > _questions.Count-1)
+            {
+                return;
+            }
+            isFlagged[_currentIndex] = !isFlagged[_currentIndex];
+            if (isFlagged[_currentIndex])
+            {
+                _flaggedQuestions.Add(_questions[_currentIndex]);
+                btnFlag.Text = "Unflag";
+                btnNext.Enabled = true;
+                btnNext.BackColor = SystemColors.Control;
+
+
+            }
+            else
+            {
+                _flaggedQuestions.Remove(_questions[_currentIndex]);
+                btnFlag.Text = "Flag";
+                btnNext.Enabled = false;
+                btnNext.BackColor = Color.Silver;
+
+
+            }
+        }
+
+        private void btnReviewNext_Click(object sender, EventArgs e)
+        {
+            SaveReviewAnswer();
+            if (_reviewIndex <= _flaggedQuestions.Count-1) // if index of the question is in the question list range.
+            {
+                _reviewIndex++; // if user clicks on 'Next button'...
+                ShowReviewScreen();
+            }
+        }
+
+        private void btnReviewPrevious_Click(object sender, EventArgs e)
+        {
+            SaveReviewAnswer();
+            if (_reviewIndex > 0)
+            {
+                _reviewIndex--;
+                ShowReviewScreen();
+            }
+        }
+
+        private void btnReviewFlaggedQuestions_Click(object sender, EventArgs e)
+        {
+            if (_currentIndex == _questions.Count - 1)
+            {
+                if (_flaggedQuestions.Count > 0)
+                {
+                    DialogResult result = MessageBox.Show($"You have {_flaggedQuestions.Count} flagged questions.\n" + "Would you like to review them before finishing?", "Review Flagged Questions", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        StartReviewMode();
+                    }
+                    else
+                    {
+                        MessageBox.Show("You can click 'Submit Quiz' when ready.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No flagged Questions. You can click 'Submit Quiz' when ready.");
+                }
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            
         }
     }
 }

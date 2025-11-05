@@ -37,11 +37,15 @@
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.lblTimer = new System.Windows.Forms.Label();
-            this.QuizTimer = new System.Windows.Forms.Timer(this.components);
             this.lblQuestionNo = new System.Windows.Forms.Label();
             this.lblTopic = new System.Windows.Forms.Label();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.lblDifficulty = new System.Windows.Forms.Label();
+            this.btnFlag = new System.Windows.Forms.Button();
+            this.btnReviewFlaggedQuestions = new System.Windows.Forms.Button();
+            this.btnReviewNext = new System.Windows.Forms.Button();
+            this.btnReviewPrevious = new System.Windows.Forms.Button();
+            this.QuizTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // lblQuestion
@@ -104,7 +108,7 @@
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(625, 329);
+            this.btnNext.Location = new System.Drawing.Point(620, 329);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(111, 46);
             this.btnNext.TabIndex = 5;
@@ -116,7 +120,7 @@
             // 
             this.btnPrevious.Location = new System.Drawing.Point(25, 329);
             this.btnPrevious.Name = "btnPrevious";
-            this.btnPrevious.Size = new System.Drawing.Size(93, 46);
+            this.btnPrevious.Size = new System.Drawing.Size(105, 46);
             this.btnPrevious.TabIndex = 6;
             this.btnPrevious.Text = "Previous";
             this.btnPrevious.UseVisualStyleBackColor = true;
@@ -131,10 +135,6 @@
             this.lblTimer.TabIndex = 7;
             this.lblTimer.Text = "label1";
             this.lblTimer.Click += new System.EventHandler(this.lblTimer_Click);
-            // 
-            // QuizTimer
-            // 
-            this.QuizTimer.Tick += new System.EventHandler(this.QuizTimer_Tick);
             // 
             // lblQuestionNo
             // 
@@ -157,7 +157,7 @@
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(625, 395);
+            this.btnSubmit.Location = new System.Drawing.Point(620, 395);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(111, 32);
             this.btnSubmit.TabIndex = 10;
@@ -175,11 +175,59 @@
             this.lblDifficulty.Text = "label1";
             this.lblDifficulty.Click += new System.EventHandler(this.lblDifficulty_Click);
             // 
+            // btnFlag
+            // 
+            this.btnFlag.Location = new System.Drawing.Point(625, 19);
+            this.btnFlag.Name = "btnFlag";
+            this.btnFlag.Size = new System.Drawing.Size(106, 39);
+            this.btnFlag.TabIndex = 12;
+            this.btnFlag.Text = "Flag Question";
+            this.btnFlag.UseVisualStyleBackColor = true;
+            this.btnFlag.Click += new System.EventHandler(this.btnFlag_Click);
+            // 
+            // btnReviewFlaggedQuestions
+            // 
+            this.btnReviewFlaggedQuestions.Location = new System.Drawing.Point(466, 388);
+            this.btnReviewFlaggedQuestions.Name = "btnReviewFlaggedQuestions";
+            this.btnReviewFlaggedQuestions.Size = new System.Drawing.Size(129, 46);
+            this.btnReviewFlaggedQuestions.TabIndex = 13;
+            this.btnReviewFlaggedQuestions.Text = "Review Flagged Questions";
+            this.btnReviewFlaggedQuestions.UseVisualStyleBackColor = true;
+            this.btnReviewFlaggedQuestions.Click += new System.EventHandler(this.btnReviewFlaggedQuestions_Click);
+            // 
+            // btnReviewNext
+            // 
+            this.btnReviewNext.Location = new System.Drawing.Point(484, 329);
+            this.btnReviewNext.Name = "btnReviewNext";
+            this.btnReviewNext.Size = new System.Drawing.Size(111, 46);
+            this.btnReviewNext.TabIndex = 14;
+            this.btnReviewNext.Text = "Next";
+            this.btnReviewNext.UseVisualStyleBackColor = true;
+            this.btnReviewNext.Click += new System.EventHandler(this.btnReviewNext_Click);
+            // 
+            // btnReviewPrevious
+            // 
+            this.btnReviewPrevious.Location = new System.Drawing.Point(136, 329);
+            this.btnReviewPrevious.Name = "btnReviewPrevious";
+            this.btnReviewPrevious.Size = new System.Drawing.Size(105, 46);
+            this.btnReviewPrevious.TabIndex = 15;
+            this.btnReviewPrevious.Text = "Previous";
+            this.btnReviewPrevious.UseVisualStyleBackColor = true;
+            this.btnReviewPrevious.Click += new System.EventHandler(this.btnReviewPrevious_Click);
+            // 
+            // QuizTimer
+            // 
+            this.QuizTimer.Tick += new System.EventHandler(this.QuizTimer_Tick);
+            // 
             // btnSubmitQuiz
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnReviewPrevious);
+            this.Controls.Add(this.btnReviewNext);
+            this.Controls.Add(this.btnReviewFlaggedQuestions);
+            this.Controls.Add(this.btnFlag);
             this.Controls.Add(this.lblDifficulty);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.lblTopic);
@@ -210,10 +258,14 @@
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.Label lblTimer;
-        private System.Windows.Forms.Timer QuizTimer;
         private System.Windows.Forms.Label lblQuestionNo;
         private System.Windows.Forms.Label lblTopic;
         private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.Label lblDifficulty;
+        private System.Windows.Forms.Button btnFlag;
+        private System.Windows.Forms.Button btnReviewFlaggedQuestions;
+        private System.Windows.Forms.Button btnReviewNext;
+        private System.Windows.Forms.Button btnReviewPrevious;
+        private System.Windows.Forms.Timer QuizTimer;
     }
 }

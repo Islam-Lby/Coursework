@@ -10,7 +10,6 @@ namespace Coursework
     {
         private string name; // stores the username enterd by the user,uit is then used in the username for,
         private int score; // store the score that the user has achieved after they have completed the quiz
-
         public Results(string name, int score) 
         {
             this.name = name;
@@ -24,7 +23,7 @@ namespace Coursework
         {
             return score;
         }
-
+        
 
     }
 }
