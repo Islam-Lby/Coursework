@@ -15,9 +15,11 @@ namespace Coursework
         private string _selectedTopic;
         private string _selectedDifficulty;
         
+        
         public TopicSelectionForm()
         {
             InitializeComponent();
+
         }
 
         private void btnStartQuiz_Click(object sender, EventArgs e)
@@ -62,6 +64,10 @@ namespace Coursework
         private void cmbTopics_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
         }
     }
 }

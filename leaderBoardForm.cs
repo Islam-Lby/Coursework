@@ -30,7 +30,6 @@ namespace Coursework
         {
 
             List<Results> allResults = LoadResults(); // creates a new instance of the Results class
-
             Leader_board board = new Leader_board(); // creates a new instance of the Leaderboard class
             foreach (Results r in allResults)
             {
@@ -39,15 +38,13 @@ namespace Coursework
             board.SortResults(); // Sorts the results using an insertion sort in descending order
             List<Results> sortedResults = board.GetResults();
 
-            for (int i = 0; i < sortedResults.Count; i++)
+            for (int i = 0; i <=10; i++)
             {
                 Results r = sortedResults[i];
-                string rank = (i + 1) + ". "; 
-            
+                string rank = (i + 1) + ". ";
                 lstScores.Items.Add(rank + r.GetuserName() + " - " + r.Getscore()); // outputs the score in a list box with a number to rank the scoers '1st, 2nd 3rd' etc
+                
             }
-
-
 
         }
 
@@ -57,20 +54,16 @@ namespace Coursework
 
             try
             {
-                StreamReader reader = new StreamReader("scores.CSV"); // opens and reads in the file called "scores.csv
-
+                StreamReader reader = new StreamReader("scores.csv"); // opens and reads in the file called "scores.csv
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] parts = line.Split(','); // splits each line of the file based on the comma
-
-                    string username = parts[0];
-                    int score = int.Parse(parts[1]);
-
-                    Results r = new Results(username, score); // adds BOTH the score and the username into 1 object to store on a single line 
+                    string username = parts[0]; // stoers the username
+                    int score = int.Parse(parts[1]); // stores the score
+                    Results r = new Results(User.uName, score); // adds BOTH the score and the username into 1 object to store on a single line 
                     results.Add(r); // adds to the list of results
                 }
-
                 reader.Close(); // closes the file
             }
             catch 
