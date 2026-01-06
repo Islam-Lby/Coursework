@@ -27,7 +27,7 @@ namespace Coursework
 
         public void SortResults() // insertion sort to display usernames 
         {
-            for (int i = 1; i <= _results.Count; i++)
+            for (int i = 1; i < _results.Count; i++)
             {
                 Results current = _results[i];
                 int j = i - 1;
@@ -37,7 +37,6 @@ namespace Coursework
                     _results[j + 1] = _results[j];
                     j--;
                 }
-
                 _results[j + 1] = current;
             }
         }

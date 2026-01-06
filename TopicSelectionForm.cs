@@ -15,7 +15,6 @@ namespace Coursework
         private string _selectedTopic;
         private string _selectedDifficulty;
         
-        
         public TopicSelectionForm()
         {
             InitializeComponent();
@@ -56,6 +55,7 @@ namespace Coursework
             cmbDifficulty.Items.Add("Easy");
             cmbDifficulty.Items.Add("Medium");
             cmbDifficulty.Items.Add("Hard");
+
 
 
 

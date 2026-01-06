@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,16 +23,16 @@ namespace Coursework
         private int _timeLeft = 30 * 60; // how long the user has to complete the quiz
         private int score = 0; // initiaalise score variable to keep track of the score
         private bool quizSubmitted = false; // Tracks whether the user has submitted the quiz
-        private List<Question> _flaggedQuestions;
-        private bool[] isFlagged;
-        private int _reviewIndex;
+        private List<Question> _flaggedQuestions; // list of questions that ser flags if they are stuck
+        private bool[] isFlagged; // checks whether the question has indeed been flagged
+        private int _reviewIndex; // reviews 
+        private int streak = 0;
+        private bool streaktracking = false;
         public btnSubmitQuiz(string topic, string difficulty)
         {
 
             InitializeComponent();
-
-
-            _questions = ShuffleQuestions(LoadQuestionsFromCSV(topic, difficulty)); // the questions that have been loaded from the file based off user preference
+            _questions = ShuffleQuestions(LoadQuestionsFromCSV(topic, difficulty)); // the questions that have been loaded from the file based off user preferenc
             _userAnswers = new string[_questions.Count];
             _currentIndex = 0;
             _flaggedQuestions = new List<Question>();
@@ -39,9 +40,6 @@ namespace Coursework
             DisplayQuestion(_currentIndex); // Displays the question based on the question index
             QuizTimer.Interval = 1000; // the timer decrements by 1 second
             QuizTimer.Start(); // starts the timer
-                               // btnSubmitQuiz.Click += btnSubmitQuiz_Click;
-            
-
         }
 
         public List<Question> LoadQuestionsFromCSV(string topic, string difficulty)
@@ -56,8 +54,6 @@ namespace Coursework
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] values = line.Split(','); // splits each line of the file based on the comma
-
-
                     string _difficulty = values[0]; // difficulty is stored in the 1st column of the csv file
                     string _topic = values[1]; // the topic is in the 2nd column of the csv file
                     string questionText = values[2]; //the topic is in the 3rd column of the CSV file
@@ -67,10 +63,6 @@ namespace Coursework
                     options[2] = values[5]; // stores 3rd option
                     options[3] = values[6]; // stores 4th option
                     string answer = values[7]; // the actual answer to the question is stored in the final column.
-
-
-
-
                     if (_difficulty == difficulty && _topic == topic)
                     {
                         Question q = new Question(_difficulty, _topic, questionText, options, answer); // create a new
@@ -79,7 +71,7 @@ namespace Coursework
                                                                                                        // format (order) as the CSV file
                         questionList.Add(q); // Adds the question to the list if it is relevant to the selected topic
                     }
-
+                    
                 }
             }
             catch
@@ -89,6 +81,9 @@ namespace Coursework
             }
             return questionList; // sends the filtered list of questions back to the quiz.
         }
+
+        
+
         private void DisplayQuestion(int index)
         {
             rbOptionA.Checked = false;
@@ -98,14 +93,7 @@ namespace Coursework
             btnReviewNext.Visible = false;
             btnReviewPrevious.Visible = false;
 
-            if (isFlagged[index])
-            {
-                btnFlag.Text = "Unflag";
-            }
-            else
-            {
-                btnFlag.Text = "Flag Question";
-            }
+            
 
             if (index >= 0 && index < _questions.Count) // checks that the index of the question
                                                         // in the list is within the range of questions
@@ -143,12 +131,14 @@ namespace Coursework
                     btnNext.Visible = true; // if the index of the current question is between the 1st question
                                             // and the penultimate question, then the 'next' button is made visible 
                     btnSubmit.Visible = false;
+                    btnReviewFlaggedQuestions.Visible = false; // while the user's are answering the quiz, they should not see the 'Review Flagged Questions' button.
                 }
                 else
                 {
                     btnNext.Visible = false; // if not, it is not made visible
                     btnSubmit.Visible = true;
-                    
+                    btnReviewFlaggedQuestions.Visible = true; // if the user is on the last question, the 'Review Flagged Questions' button is made visible.
+
 
                 }
                 if (_currentIndex == 0)
@@ -162,16 +152,15 @@ namespace Coursework
 
                 }
                 else { btnPrevious.Visible = true; } // if not (if the user is anywhere between the 2nd question and the last question) then the 'previous' button is made visible)
-                /*if (isFlagged[_currentIndex])
+                if (isFlagged[index])
                 {
                     btnFlag.Text = "Unflag";
-
                 }
                 else
                 {
-                    btnFlag.Text = "Flag";
-                }*/
-                
+                    btnFlag.Text = "Flag Question";
+                }
+
 
 
                 UpdateNextButton();
@@ -183,16 +172,19 @@ namespace Coursework
 
         private void StartReviewMode()
         {
-            _reviewIndex = 0; // when 
+            _reviewIndex = 0; // when the user flags a question, the flagged questions are displayed starting with the VERY FIRST flagged question
             ShowReviewScreen();
         }
 
         private void ShowReviewScreen()
         {
+            btnFlag.Visible = false;
+            btnReviewFlaggedQuestions.Visible = false; // flag button and button for reviewing the flagged questions are hidden to make the UI more presentable
             rbOptionA.Checked = false; 
             rbOptionB.Checked = false;
             rbOptionC.Checked = false;
             rbOptionD.Checked = false;
+            btnPrevious.Text = "Go back to quiz";
             // all radio buttons are unchecked before the user answers any question
             if (_reviewIndex >= 0 && _reviewIndex < _flaggedQuestions.Count)
             {
@@ -262,6 +254,17 @@ namespace Coursework
 
         }
 
+        private void EndQuiz()
+        {
+            MarkQuiz();
+            ReviewAnswersForm RAfrm = new ReviewAnswersForm(_questions, _userAnswers);
+            RAfrm.Show();
+            this.Close();
+
+
+
+        }
+
         private string GetSavedAnswer(Question q)
         {
             if (_reviewIndex >= 0 && _reviewIndex < _userAnswers.Length) // if a user is reviewing a question, check if it has already been answered
@@ -291,7 +294,7 @@ namespace Coursework
                 else _userAnswers[_reviewIndex] = ""; // if nothing was selected, an empty string is saved
             
         }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -299,25 +302,65 @@ namespace Coursework
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            SaveUserAnswer(); // when user moves forward, user answer is saved
+            if (_currentIndex == 0)
+            {
+                DialogResult Result = MessageBox.Show(
+            $"Would you like to mark your progress? If you answer 5 questions correctly in a row on '{_questions[_currentIndex].GetTopic()}', you can try the next difficulty level.",
+            "Track Your Progress?",
+            MessageBoxButtons.YesNo);
+                // when on the 1st question, user is asked whether they want their progress to be tracked or not
+                if (Result == DialogResult.Yes)
+                {
+                    streaktracking = true; // if user agrees to track their progress, their steraks will be calculated
 
+                }
+            }
+            SaveUserAnswer(); // when user moves forward, user answer is saved
+            string uAnswers = _userAnswers[_currentIndex];
+            string correctAnswer = _questions[_currentIndex].GetAnswer();
+            if (streaktracking)
+            {
+                if (uAnswers == correctAnswer)
+                {
+                    streak++; // when marking, if the answer is correct, streak is incremented
+                    score++;
+                }
+                else { streak = 0; } // if a question is wrong, streak is broken and reset to 0
+                if (streak >= 5)
+                {
+                    string name = User.uName;
+                    Results res = new Results(name, score); // if user answers 5 questions in a row correctly (provided that they have allowed their streak to be tracked)...
+                    SaveResult(name, score); //...their scores are saved to the leaderboard
+                    MessageBox.Show($"Well Done! You have answered 5 {_questions[_currentIndex].GetDifficulty()} questions correctly in a rown on the topic {_questions[_currentIndex].GetTopic()}, now try the next difficulty");
+                    TopicSelectionForm TPfrm = new TopicSelectionForm(); // user gets to choose the next topic, topic selection form opens.
+                    TPfrm.Show();
+                    this.Close();
+                } 
+            }
             if (_currentIndex < _questions.Count - 1) // if index of the question is in the question list range.
             {
                 _currentIndex++; // if user clicks on 'Next button'...
                 DisplayQuestion(_currentIndex); //...the next question is displayed
             }
-            
+
         }
+            
+        
+
+
+
+                
 
         private void btnPrevious_Click(object sender, EventArgs e)
         {
-            SaveUserAnswer(); // when user moves back, user answer is saved
-            if (_currentIndex > 0)
-            {
-                _currentIndex--; // if user clicks on previous button...
-                DisplayQuestion(_currentIndex); // ... display the previous question
+                SaveUserAnswer(); // when user moves back, user answer is saved
+                if (_currentIndex > 0)
+                {
+                    _currentIndex--; // if user clicks on previous button...
+                    DisplayQuestion(_currentIndex); // ... display the previous question
 
-            }
+                }
+           
         }
 
         private void UpdateNextButton()
@@ -334,8 +377,8 @@ namespace Coursework
             }
         }
 
-
-
+        
+        
         private void SaveUserAnswer() // saves user answer
         {
             if (rbOptionA.Checked)
@@ -392,14 +435,12 @@ namespace Coursework
             lblTimer.Text = $"Time left: {mins} mins: {secs} secs"; // displays time left to complete the quiz
             if (_timeLeft <= 0 || quizSubmitted == true)
             {
-
+                string u = User.uName;
                 QuizTimer.Stop(); // when timer hits 0... or if user submits the quiz
-                MarkQuiz(); // ... Quiz is marked
-                Results result = new Results(User.uName, score);
-                SaveResult(User.uName, score);
-                leaderBoardForm lbForm = new leaderBoardForm();
-                lbForm.Show();
-                this.Hide();
+                EndQuiz();
+                Results result = new Results(u, score);
+                SaveResult(u, score);
+                
 
 
 
@@ -425,6 +466,7 @@ namespace Coursework
             lblTimer.ForeColor = System.Drawing.Color.White;
             lblTopic.ForeColor = System.Drawing.Color.White;
             lblQuestionNo.ForeColor = System.Drawing.Color.White;
+
         }
 
 
@@ -490,7 +532,7 @@ namespace Coursework
         private void rbOptionD_CheckedChanged(object sender, EventArgs e)
         {
             UpdateNextButton();
-
+            
         }
 
         private void lblDifficulty_Click(object sender, EventArgs e)

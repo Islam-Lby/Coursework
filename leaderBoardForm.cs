@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Coursework
 {
@@ -16,7 +17,6 @@ namespace Coursework
         public leaderBoardForm()
         {
             InitializeComponent();
-            LoadResults();
             DisplayScores();
         }
 
@@ -37,8 +37,25 @@ namespace Coursework
             }
             board.SortResults(); // Sorts the results using an insertion sort in descending order
             List<Results> sortedResults = board.GetResults();
+            lstScores.Items.Clear(); 
+            chartProgress.Series.Clear();
+            Series userSeries = new Series("Your Progress"); 
+            userSeries.ChartType = SeriesChartType.Line; // 
+            userSeries.BorderWidth = 3;                  // draws the graph   
+            userSeries.Color = Color.Blue;               //
 
-            for (int i = 0; i <=10; i++)
+            int attepmtNumber = 1;
+            foreach(Results r in allResults)
+            {
+                if (r.GetuserName() == User.uName)
+                {
+                    userSeries.Points.AddXY(attepmtNumber, r.Getscore()); // Graph - score on y-axis, attempt on x axis.
+                    attepmtNumber++; // attempt number - when user tries again, attempt number on x-axis increases
+                }
+            }
+            chartProgress.Series.Add(userSeries);
+            int max = Math.Min(10, sortedResults.Count); // variable used in for loop below to display top 10 scores 
+            for (int i = 0; i < max; i++)
             {
                 Results r = sortedResults[i];
                 string rank = (i + 1) + ". ";
@@ -47,6 +64,9 @@ namespace Coursework
             }
 
         }
+
+        
+
 
         private List<Results> LoadResults()
         {
@@ -61,7 +81,7 @@ namespace Coursework
                     string[] parts = line.Split(','); // splits each line of the file based on the comma
                     string username = parts[0]; // stoers the username
                     int score = int.Parse(parts[1]); // stores the score
-                    Results r = new Results(User.uName, score); // adds BOTH the score and the username into 1 object to store on a single line 
+                    Results r = new Results(username, score); // adds BOTH the score and the username into 1 object to store on a single line 
                     results.Add(r); // adds to the list of results
                 }
                 reader.Close(); // closes the file
@@ -76,7 +96,15 @@ namespace Coursework
             return results;
         }
 
+        private void labelLbTitle_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
 

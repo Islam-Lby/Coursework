@@ -91,6 +91,7 @@
             this.txtPword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtPword.Location = new System.Drawing.Point(279, 250);
             this.txtPword.Name = "txtPword";
+            this.txtPword.PasswordChar = '*';
             this.txtPword.Size = new System.Drawing.Size(216, 15);
             this.txtPword.TabIndex = 5;
             this.txtPword.TextChanged += new System.EventHandler(this.txtPword_TextChanged);

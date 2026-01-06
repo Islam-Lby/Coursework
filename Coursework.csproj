@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,11 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="TopicSelectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="TopicSelectionForm.Designer.cs">
+      <DependentUpon>TopicSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Leader board.cs" />
     <Compile Include="leaderBoardForm.cs">
@@ -75,9 +76,16 @@
       <DependentUpon>QuizForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Results.cs" />
+    <Compile Include="ReviewAnswersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReviewAnswersForm.Designer.cs">
+      <DependentUpon>ReviewAnswersForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="User.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="UserProgress.cs" />
+    <EmbeddedResource Include="TopicSelectionForm.resx">
+      <DependentUpon>TopicSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="leaderBoardForm.resx">
       <DependentUpon>leaderBoardForm.cs</DependentUpon>
@@ -96,6 +104,9 @@
     </Compile>
     <EmbeddedResource Include="QuizForm.resx">
       <DependentUpon>QuizForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReviewAnswersForm.resx">
+      <DependentUpon>ReviewAnswersForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

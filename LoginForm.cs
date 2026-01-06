@@ -50,7 +50,7 @@ namespace Coursework
                     string[] parts = line.Split(',');
                     if (parts.Length >= 2)
                     {
-                        if (parts[0] == username) // // first column stores username
+                        if (parts[0].ToLower() == username.ToLower()) // // first column stores username
                         {
                             userExists = true; // user exists in the file
                             if (parts[1] == password) // compares entered password with password in the file
@@ -83,18 +83,21 @@ namespace Coursework
 
                     }
                 }
-                if (btnRegisterWasClicked) // when the 'Register' button is clicked
+               else if (btnRegisterWasClicked) // when the 'Register' button is clicked
                 {
+                    
                     if (userExists) // if the username is already in the file
                     {
                         MessageBox.Show("You cannot register with the same username as before. Choose a different username."); // user cannot register with same username twice
-                        
+
                     }
                     else
                     {
                         StreamWriter writer = File.AppendText("users&Passwords.csv"); // if otherrwise, the username and password is written to the file and stored there
                         writer.WriteLine(username + ',' + password);
                         writer.Close();
+                        MessageBox.Show("Registration successful.");
+
                     }
                 }
             }
